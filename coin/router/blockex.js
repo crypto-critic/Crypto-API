@@ -64,13 +64,13 @@ module.exports = (coin) => {
      * @param {Object} req The request object.
      * @param {Object} res The response object.
      */
-    const getAvgBlockTime = () => {
+    const getAvgBlockTime = async (req, res) => {
         // When does the cache expire.
         // For now this is hard coded.
         let cache = 90.0;
         let cutOff = moment().utc().add(60, 'seconds').unix();
         let loading = true;
-
+        // console.log(cutOff);
         // Generate the average.
         const getAvg = async() => {
             loading = true;
@@ -95,16 +95,16 @@ module.exports = (coin) => {
 
         // Load the initial cache.
         getAvg();
-
+        console.log(cache);
         return async(req, res) => {
             res.json(cache || 0.0);
 
             // If the cache has expired then go ahead
             // and get a new one but return the current
             // cache for this request.
-            if (!loading && cutOff <= moment().utc().unix()) {
-                await getAvg();
-            }
+            // if (!loading && cutOff <= moment().utc().unix()) {
+            //     await getAvg();
+            // }
         };
     };
 

@@ -19,7 +19,7 @@ const mncoins = 5000.0;
 const getMNBlocksPerDay = (mns) => {
     return blocksPerDay / mns;
 };
-
+const gettotalSupply = 1000000;
 const getMNBlocksPerWeek = (mns) => {
     return getMNBlocksPerDay(mns) * (365.25 / 52);
 };
@@ -340,6 +340,7 @@ const isRewardRawTransaction = (rpctx) => {
 }
 
 module.exports = {
+    gettotalSupply,
     avgBlockTime,
     blocksPerDay,
     blocksPerMonth,

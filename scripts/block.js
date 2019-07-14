@@ -42,7 +42,7 @@ var block = async (coin) => {
                     console.log(heigt+ ' POS');
                     await util.addPoS(block, rpctx);
                 } else {
-                    console.log(height + ' POW')
+                    console.log(height + ' POW');
                     await util.addPoW(block, rpctx);
                 }
             });

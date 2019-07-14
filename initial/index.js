@@ -1,5 +1,5 @@
 module.exports = [
-    // 'award',
-    'twins',
-    'bulwark'
+    'award',
+    // 'twins',
+    // 'bulwark'
 ];

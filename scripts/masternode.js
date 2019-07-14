@@ -14,7 +14,6 @@ var masternode = async (coin) => {
         await Masternode.deleteMany({});
         rpc.timeout(10000); // 10 secs
         const mns = await rpc.call('masternode', ['list']);
-        console.log(mns);
         const inserts = [];
         await forEach(mns, async (mn) => {
             const masternode = new Masternode({

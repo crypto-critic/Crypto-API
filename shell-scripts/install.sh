@@ -128,7 +128,7 @@ cat > mycron << EOL
 EOL
     crontab mycron
     rm -f mycron
-    forever start ./server/index.js
+    pm2 start ./server/index.js
     sudo pm2 startup ubuntu
 }
 
