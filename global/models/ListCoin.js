@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
-
 const Schema = mongoose.Schema;
+const GlobalConnection = require('../globalConnection');
 
 const ListSchema = new Schema({
     coinId: { type: String, unique: true, index: true },
@@ -9,6 +9,6 @@ const ListSchema = new Schema({
     category: { type: String}
 });
 
-const List = mongoose.model('lists', ListSchema);
+const List = GlobalConnection.model('lists', ListSchema);
 
 module.exports = List;
