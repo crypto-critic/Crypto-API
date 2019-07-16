@@ -12,7 +12,7 @@ var dbString = 'mongodb://' + settings.dbsettings.user;
     dbString = dbString + '/';
 class Connection {
     constructor(coin){
-        this = mongoose.createConnection(dbString + coin);
+        this.connection = mongoose.createConnection(dbString + coin);
     }
 }
 module.exports = Connection;

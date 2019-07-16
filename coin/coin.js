@@ -1,30 +1,29 @@
 const RPC = require('./rpc/rpc');
 const Connection = require('./connection');
-const createRouter = require('./router/createRouter');
-const coin = require('./blockchain-models/coin');
+const CoinX = require('./blockchain-models/coin');
 const Block = require('./blockchain-models/block');
-const masternode = require('./blockchain-models/masternode');
-const peer = require('./blockchain-models/peer');
-const rich = require('./blockchain-models/rich');
-const tx = require('./blockchain-models/tx');
-const utxo = require('./blockchain-models/utxo');
-const blockreward = require('./blockchain-models/blockreward');
-const router = require('./router/createRouter');
+const Masternode = require('./blockchain-models/masternode');
+const Peer = require('./blockchain-models/peer');
+const Rich = require('./blockchain-models/rich');
+const TX = require('./blockchain-models/tx');
+const UTXO = require('./blockchain-models/utxo');
+const BlockReward = require('./blockchain-models/blockreward');
+const Router = require('./router/createRouter');
 
-export class Coin {
+class Coin {
     constructor(object){
-        this.name = object.name;
-        this.connection = new Connection(object.name);
+        this.id = object.id;
+        this.connection = new Connection(object.id).connection;
         this.rpc = new RPC(object.wallet);
-        this.block = new Block(this.connection);
-        this.coin = new coin.Coin(this.connection).model;
-        this.masternode = new masternode.Masternode(this.connection).model;
-        this.peer = new peer.Peer(this.connection).model;
-        this.rich = new rich.Rich(this.connection).model;
-        this.tx = new tx.TX(this.connection).model;
-        this.utxo = new utxo.UTXO(this.connection).model;
-        this.blockreward = new blockreward.BlockReward(this.connection).model;
-        this.router = new router.Router(this).router;
+        this.block = new Block(this.connection).model;
+        this.coin = new CoinX(this.connection).model;
+        this.masternode = new Masternode(this.connection).model;
+        this.peer = new Peer(this.connection).model;
+        this.rich = new Rich(this.connection).model;
+        this.tx = new TX(this.connection).model;
+        this.utxo = new UTXO(this.connection).model;
+        this.blockreward = new BlockReward(this.connection).model;
+        this.router = new Router(this).router;
         // this.marketData = {};
         // this.syncMarketData();
     }
@@ -32,3 +31,4 @@ export class Coin {
         console.log('sync market data')
     }
 }
+module.exports = Coin;
