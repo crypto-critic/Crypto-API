@@ -1,17 +1,5 @@
 const mongoose = require('mongoose');
 
-/*
-  Nesting is as follows:
-
-  BlockRewardDetails
-  ->BlockRewardDetailsMasternode
-  ->BlockRewardDetailsStake
-  -->BlockRewardDetailsStakeInput
-*/
-
-/**
- * Structure for detailed breakdown of the staking reward
- */
 const BlockRewardDetailsStakeInput = new mongoose.Schema({
     txId: { index: true, required: true, type: String },
     value: { index: true, required: true, type: Number },
@@ -59,8 +47,10 @@ const BlockRewardDetails = new mongoose.Schema({
  *
  *
  */
-function BlockRewardDetailsSchema(conn){
-    this.model = conn.model('BlockRewardDetails', BlockRewardDetails, 'blockRewardDetails');
+class BlockReward {
+    constructor(connection){
+        this.model = connection.model('BlockRewardDetails', BlockRewardDetails, 'blockRewardDetails');
+    }
 }
 
-module.exports.BlockReward = BlockRewardDetailsSchema;
+module.exports  = BlockReward;

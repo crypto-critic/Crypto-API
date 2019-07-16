@@ -1,18 +1,5 @@
 var mongoose = require('mongoose');
 
-// function TX(conn) {
-//   this.model = conn.model('Tx', new mongoose.Schema({
-//     txid: { type: String, lowercase: true, unique: true, index: true},
-//     vin: { type: Array, default: [] },
-//     vout: { type: Array, default: [] },
-//     total: { type: Number, default: 0 },
-//     timestamp: { type: Number, default: 0 },
-//     blockhash: { type: String },
-//     blockindex: {type: Number, default: 0},
-//   }, {id: false}))
-// }
-// const mongoose = require('mongoose');
-
 /**
  * When a vin is spent, we'll have extra data of what was spent
  */
@@ -84,9 +71,10 @@ txSchema.virtual('value')
  * from the node on demand.  A cache can be
  * implemented if needed for recent txs.
  */
-function TX(conn){
-  this.model = conn.model('TX', txSchema, 'txs')
+class TX {
+  constructor(connection) {
+    this.model = connection.model('TX', txSchema, 'txs');
+  }
 }
 
-// module.exports = TX;
-module.exports.TX = TX;
+module.exports = TX;
