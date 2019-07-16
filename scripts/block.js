@@ -2,10 +2,11 @@ require('babel-polyfill');
 const exit = require('../lib/exit');
 const { forEachSeries } = require('p-iteration');
 const locker = require('../lib/locker');
-var arrayOfCoin = require(`../coin/arrayOfCoin`);
+const getList = require(`../global/getList`);
+const Coin = require('../coin/coin');
 
 var block = async (coin) => {
-    var blockchain = await require(`../initial/${coin.name}chain`);
+    var blockchain = await require(`../initial/${coin.id}chain`);
     var util = await require('./util')(coin);
     var Block = await coin.block;
     var TX = await coin.tx;
@@ -92,6 +93,26 @@ var block = async (coin) => {
     update();
     // return update;
 };
-Promise.all(arrayOfCoin.map(i => {
-    block(i);
-}));
+// getList().then(data => {
+//     Promise.all(data.map(i => {
+//         console.log(i);
+//         block(new Coin(i));
+//     }));
+// });
+const awardconfig =
+    {
+        id: 'awardcoin',
+        wallet:
+            {
+                host: 'localhost',
+                port: 19915,
+                user: 'sha1',
+                pass: 'sha1',
+                timeout: 8000
+            }
+    };
+
+const award = new Coin(awardconfig);
+console.log(award.id);
+
+// block(award);

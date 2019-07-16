@@ -5,7 +5,7 @@ const fetch = require('../lib/fetch');
 const { forEach } = require('p-iteration');
 const locker = require('../lib/locker');
 const moment = require('moment');
-var arrayOfCoin = require(`../coin/arrayOfCoin`);
+var arrayOfCoin = require(`global/getList`);
 // Models.
 var peer = coin => {
     const Peer = coin.peer;

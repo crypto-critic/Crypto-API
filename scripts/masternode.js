@@ -5,7 +5,7 @@ const {forEach} = require('p-iteration');
 const locker = require('../lib/locker');
 const moment = require('moment');
 // Models.
-var arrayOfCoin = require(`../coin/arrayOfCoin`);
+var arrayOfCoin = require(`global/getList`);
 var masternode = async (coin) => {
     const Masternode = await coin.masternode;
     const rpc = await coin.rpc;

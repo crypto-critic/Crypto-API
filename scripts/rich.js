@@ -1,7 +1,7 @@
 require('babel-polyfill');
 const exit = require('../lib/exit');
 const locker = require('../lib/locker');
-var arrayOfCoin = require(`../coin/arrayOfCoin`);
+var arrayOfCoin = require(`global/getList`);
  var rich = async coin => {
     // Models.
     const Rich = await coin.rich;

@@ -3,7 +3,7 @@ const exit = require('../lib/exit');
 const fetch = require('../lib/fetch');
 const locker = require('../lib/locker');
 const moment = require('moment');
-var arrayOfCoin = require(`../coin/arrayOfCoin`);
+var arrayOfCoin = require(`global/getList`);
 var coin = async (coin) => {
     const Rich = await coin.rich;
     const Coin = await coin.coin;
