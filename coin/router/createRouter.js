@@ -5,6 +5,7 @@ class Router {
         const blockex = require('./blockex')(coin);
         const iquidus = require('./iquidus')(coin);
         const chain = require('./chainRouter')(coin);
+        const market = require('./marketRouter')(coin);
         const router = express.Router();
         router.get('/address/:hash', blockex.getAddress);
         router.get('/block/average', blockex.getAvgBlockTime);
@@ -40,6 +41,7 @@ class Router {
         router.get('/chainmasternoderatio', chain.chainMasternodeRatio);
         router.get('/collateral', chain.chainCollateral);
         router.get('/totalsupply', chain.totalSupply);
+        router.get('/marketdata', market.GetMarketData);
         this.router = router;
     }
 }
