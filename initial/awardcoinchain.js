@@ -347,7 +347,7 @@ module.exports = {
     blocksPerWeek,
     blocksPerYear,
     colateral,
-    params,
+    // params,
     getMNBlocksPerDay,
     getMNBlocksPerMonth,
     getMNBlocksPerWeek,
