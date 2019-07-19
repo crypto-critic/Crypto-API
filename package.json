@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "forever start ./server/index.js"
+    "start": "forever start ./server/index.js",
+    "dev": "node ./server/index.js"
   },
   "dependencies": {
     "axios": "^0.19.0",
