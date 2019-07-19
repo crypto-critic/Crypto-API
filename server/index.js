@@ -1,7 +1,6 @@
 require('babel-polyfill');
 const cluster = require('cluster');
-//const coin = require('../coin/coin');
-var array = require(`../coin/arrayOfCoin`);
+
 // Master
 if (cluster.isMaster) {
     let cpus = require('os').cpus().length;
@@ -24,15 +23,24 @@ if (cluster.isMaster) {
 }
 // Worker
 else {
+    const getList = require('../global/getList');
+    const setupMongoDb = require('../services/mongo-setup');
+    setupMongoDb('global');
     const config = require('../initial/settings');
     const express = require('express');
     const middleware = require('./middleware');
     const app = express();
+    require('./cronJobs');
     middleware(app);
-    array.map(i => {
-        console.log(typeof i.router);
-        app.use(`/api/${i.name}`, i.router);
-    });
+    
+    let router = express.Router();
+    app.use('/api', router);
+    require('../global/router/userRouter')(router);
+    getList().then(data=>{
+        data.map(i=>{
+            app.use(`/api/${i.coinId}`, i.router)
+        })
+    })
     app.listen(config.port, () => {
         console.log(`Crypto-API running on port ${ config.port }`);
     });

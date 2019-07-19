@@ -4,12 +4,15 @@ var mongoose = require('mongoose');
 mongoose.set('useNewUrlParser', true);
 mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true);
-function Connection(coin) {
-    var dbString = 'mongodb://' + settings.dbsettings.user;
+
+var dbString = 'mongodb://' + settings.dbsettings.user;
     dbString = dbString + ':' + settings.dbsettings.password;
     dbString = dbString + '@' + settings.dbsettings.address;
     dbString = dbString + ':' + settings.dbsettings.port;
-    dbString = dbString + '/' + coin;
-    this.connection = mongoose.createConnection(dbString);
+    dbString = dbString + '/';
+class Connection {
+    constructor(coin){
+        this.connection = mongoose.createConnection(dbString + coin);
+    }
 }
-module.exports.Connection = Connection;
+module.exports = Connection;

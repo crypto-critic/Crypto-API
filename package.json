@@ -6,19 +6,24 @@
     "start": "forever start ./server/index.js"
   },
   "dependencies": {
+    "axios": "^0.19.0",
     "babel-polyfill": "^6.26.0",
+    "bcryptjs": "^2.4.3",
     "bip39": "^3.0.2",
     "bitcoin-core": "^2.0.0",
     "bitcoinjs-lib": "^5.0.5",
     "bluebird": "^3.5.5",
     "body-parser": "~1.0.0",
+    "child_process": "^1.0.2",
     "cluster": "^0.7.7",
     "connect-timeout": "^1.9.0",
     "cookie-parser": "~1.0.1",
     "cors": "^2.8.5",
     "create-hash": "^1.2.0",
+    "cron": "^1.7.1",
     "debug": "~0.7.4",
     "express": "~4.2.0",
+    "fs": "0.0.1-security",
     "hdkey": "^1.1.1",
     "isomorphic-fetch": "^2.2.1",
     "jsonminify": "0.2.3",
@@ -27,11 +32,16 @@
     "mongodb": "^3.2.6",
     "mongoose": "^5.5.12",
     "p-iteration": "^1.1.8",
+    "passport": "^0.4.0",
+    "passport-jwt": "^4.0.0",
     "qr-image": "~2.0.0",
     "request": "2.74.0",
+    "util": "^0.12.1",
     "wif": "^2.0.6"
   },
   "devDependencies": {
+    "@babel/core": "^7.5.4",
+    "@babel/preset-env": "^7.5.4",
     "jasmine": "~2.1.0"
   }
 }

@@ -1,31 +1,42 @@
-
+const moment = require('moment');
+const cache = require('../../lib/cache');
 module.exports =  (coin) => {
-    var rpc =  coin.rpc;
-    var Block = coin.block;
-    var Coin = coin.coin;
-    var chain = require(`../../initial/${coin.name}chain`);
+    const rpc =  coin.rpc;
+    const Block = coin.block;
+    const Coin = coin.coin;
+    const chain = require(`../../initial/${coin.coinId}chain`);
     const chainBlockTime = async (req, res) => {
-        var blocktime = await chain.avgBlockTime;
+        let blocktime = await chain.avgBlockTime;
         res.json({blocktime: blocktime});
     };
     const chainBlockReward = async (req, res) => {
-        var info = await rpc.call('getinfo');
-        var nHeight = info.blocks;
-        var reward = await chain.getSubsidy(nHeight);
-        res.json({blockreward: reward})
+        let info = await rpc.call('getinfo');
+        let nHeight = info.blocks;
+        let blockreward = await chain.getSubsidy(nHeight);
+        res.json({blockreward})
     };
     const chainMasternodeRatio = async (req, res) =>{
-        // const mn = await Coin.findOne().sort({ createdAt: -1 });
-        // var masternodeCount = mn.mnsOn;
-        res.json({mnratio: 0.8})
+        let info = await rpc.call('getinfo');
+        let nHeight = info.blocks;
+        const coin = await Coin.findOne().sort({ createdAt: -1 });
+        let nMasternodeCount = coin.mnsOff + coin.mnsOn;
+        let nMoneySupply = await cache.getFromCache("supply", moment().utc().add(1, 'hours').unix(), async() => {
+            const utxo = await UTXO.aggregate([
+                { $group: { _id: 'supply', total: { $sum: '$value' } } }
+            ]);
+            t = utxo[0].total;
+            return t;
+        });
+        let mnratio = chain.mnratio(nHeight, nMasternodeCount, nMoneySupply)
+        res.json({mnratio})
     };
     const chainCollateral = async (req, res) =>{
-        var collateral = await chain.mncoins;
+        let collateral = await chain.mncoins;
         res.json({collateral: collateral})
     };
-    const totalSupply = async (req, res) =>{
-        var total = await chain.gettotalSupply;
-        res.json({totalsupply: total})
+    const totalSupply = (req, res) =>{
+        let totalSupply = chain.totalSupply;
+        res.json({totalsupply})
     };
     return {
         chainBlockTime,

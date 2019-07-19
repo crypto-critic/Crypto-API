@@ -1,0 +1,1 @@
+db.createUser( { user: "sha1", pwd: "sha1", roles: [ "readWrite" ] } );
