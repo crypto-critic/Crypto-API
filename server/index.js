@@ -23,18 +23,24 @@ if (cluster.isMaster) {
 }
 // Worker
 else {
-    const setupMongoDb = require('./mongo-setup');
+    const getList = require('../global/getList');
+    const setupMongoDb = require('../services/mongo-setup');
+    setupMongoDb('global');
     const config = require('../initial/settings');
     const express = require('express');
     const middleware = require('./middleware');
     const app = express();
+    require('./cronJobs');
     middleware(app);
-    setupMongoDb('global');
-
+    
     let router = express.Router();
-    app.use("/api", router);
+    app.use('/api', router);
     require('../global/router/userRouter')(router);
-
+    getList().then(data=>{
+        data.map(i=>{
+            app.use(`/api/${i.coinId}`, i.router)
+        })
+    })
     app.listen(config.port, () => {
         console.log(`Crypto-API running on port ${ config.port }`);
     });
