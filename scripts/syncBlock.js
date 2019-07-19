@@ -1,7 +1,7 @@
 require('babel-polyfill');
-const exit = require('../lib/exit');
+const exit = require('../library/exit');
 const { forEachSeries } = require('p-iteration');
-const locker = require('../lib/locker');
+const locker = require('../library/locker');
 const getList = require(`../global/getList`);
 const Coin = require('../coin/coin');
 
