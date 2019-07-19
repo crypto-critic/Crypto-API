@@ -1,7 +1,7 @@
 require('babel-polyfill');
 var  mongoose = require('mongoose');
 module.exports = async (coin) => {
-    const blockchain = require(`../initial/${coin.name}chain`)
+    const blockchain = require(`../initial/${coin.coinId}chain`)
     const rpc = await coin.rpc;
     const TX = await coin.tx;
     const UTXO = await coin.utxo;
@@ -18,12 +18,13 @@ module.exports = async (coin) => {
                     usedTxIdsInVins.add(vin.txid);
                 }
             });
+
             const usedTxs = await TX.find({ txId: { $in: Array.from(usedTxIdsInVins)}}, { txId: 1, vout: 1, blockHeight: 1, createdAt: 1 }); // Only include vout, blockHeight & createdAt fields that we need
             const txIds = new Set();
             rpctx.vin.forEach((vin) => {
                 let vinDetails = {
                     coinbase: vin.coinbase,
-                    //sequence: vin.sequence,
+                    sequence: vin.sequence,
                     txId: vin.txid,
                     vout: vin.vout
                 };
@@ -40,15 +41,15 @@ module.exports = async (coin) => {
 
                     if (shouldStoreRelatedVout) {
                         const txById = usedTxs.find(usedTx => usedTx.txId == vin.txid);
-                        if (!txById) {
-                            // Verbose console outputs of the unsupported TX so we can easily debug TXs we don't support for inputs
-                            console.log("Unsupported TX:");
-                            console.log("===============");
-                            console.log(rpctx);
-                            console.log("===============");
-                            console.log(vin);
-                            throw `*** UNSUPPORTED BLOCKCHAIN: Could not find related TX: ${vin.txid}`;
-                        }
+                        // if (!txById) {
+                        //     // Verbose console outputs of the unsupported TX so we can easily debug TXs we don't support for inputs
+                        //     console.log("Unsupported TX:");
+                        //     console.log("===============");
+                        //     // console.log(rpctx);
+                        //     console.log("===============");
+                        //     // console.log(vin);
+                        //     // throw `*** UNSUPPORTED BLOCKCHAIN: Could not find related TX: ${vin.txid}`;
+                        // }
 
                         const vinVout = txById.vout.find(vout => vout.n == vin.vout); // Notice how we are accessing by vout number instead of by index (as some vouts are not stored like POS)
                         vinDetails.relatedVout = {
@@ -155,10 +156,10 @@ module.exports = async (coin) => {
             vout: txout,
             isReward: isRewardRawTransaction
         };
-
+        let splitRewardsData = true
         // @Todo add POW Rewards (Before POS switchover)
         // If our config allows us to extract additional reward data
-        if (!!config.splitRewardsData) {
+        if (!!splitRewardsData) {
             // If this is a rewards transaction fetch the pos & masternode reward details
             if (isRewardRawTransaction) {
 
