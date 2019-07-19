@@ -10,7 +10,7 @@ const UTXO = require('./blockchain-models/utxo');
 const BlockReward = require('./blockchain-models/blockreward');
 const Market = require('./market-models/market/market');
 const Router = require('./router/createRouter');
-const getDataFromCoingecko = require('../lib/getDataFromCoingecko');
+// const getDataFromCoingecko = require('../library/getDataFromCoingecko');
 
 class Coin {
     constructor(object){
