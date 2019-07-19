@@ -6,6 +6,7 @@
     "start": "forever start ./server/index.js"
   },
   "dependencies": {
+    "axios": "^0.19.0",
     "babel-polyfill": "^6.26.0",
     "bcryptjs": "^2.4.3",
     "bip39": "^3.0.2",
@@ -19,6 +20,7 @@
     "cookie-parser": "~1.0.1",
     "cors": "^2.8.5",
     "create-hash": "^1.2.0",
+    "cron": "^1.7.1",
     "debug": "~0.7.4",
     "express": "~4.2.0",
     "fs": "0.0.1-security",
@@ -34,6 +36,7 @@
     "passport-jwt": "^4.0.0",
     "qr-image": "~2.0.0",
     "request": "2.74.0",
+    "util": "^0.12.1",
     "wif": "^2.0.6"
   },
   "devDependencies": {
