@@ -1,9 +1,10 @@
 const JWTStrategy = require('passport-jwt').Strategy;
 const ExtractJWT = require('passport-jwt').ExtractJwt;
 const User = require('../global/models/User');
+const settings = require('../initial/settings');
 const opts = {};
 
-opts.jwtFromRequest = ExtractJWT.fromAuthHeaderAsBearerToken();
+opts.jwtFromRequest = ExtractJWT.fromAuthHeaderWithScheme(`${settings.vpsIndex}`);
 opts.secretOrKey = 'pinokarahere';
 
 module.exports = passport => {
