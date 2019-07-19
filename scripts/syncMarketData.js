@@ -1,6 +1,6 @@
 const getList = require(`../global/getList`);
-const getDataFromCoingecko = require('../lib/getDataFromCoingecko');
-const cache = require('../lib/cache');
+const getDataFromCoingecko = require('../library/getDataFromCoingecko');
+const cache = require('../library/cache');
 const moment = require('moment');
 
 const syncMarket =  async (coin) => {

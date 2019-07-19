@@ -1,8 +1,8 @@
 require('babel-polyfill');
-const exit = require('../lib/exit');
-const fetch = require('../lib/fetch');
+const exit = require('../library/exit');
+const fetch = require('../library/fetch');
 const {forEach} = require('p-iteration');
-const locker = require('../lib/locker');
+const locker = require('../library/locker');
 const moment = require('moment');
 const getList = require(`../global/getList`);
 // Models.
