@@ -8,7 +8,7 @@ class Router {
         const market = require('./marketRouter')(coin);
         const router = express.Router();
         router.get('/address/:hash', blockex.getAddress);
-        router.get('/block/average', blockex.getAvgBlockTime);
+        // router.get('/block/average', blockex.getAvgBlockTime);
         router.get('/block/is/:hash', blockex.getIsBlock);
         router.get('/block/:hash', blockex.getBlock);
         router.get('/coin', blockex.getCoin);
