@@ -13,5 +13,6 @@ module.exports = {
     user: {
         email: 'PinokaraCrypto@gmail.com',
         password: 'SecretToken@'
-    }
+    },
+    vpsIndex: 'vps01'
 };

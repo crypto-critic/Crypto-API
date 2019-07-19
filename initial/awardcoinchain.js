@@ -1,5 +1,5 @@
 const params = {
-    LAST_POW_BLOCK: 182700, // 345600
+    LAST_POW_BLOCK: 24800, // 345600
     RAMP_TO_BLOCK: 960,
     LAST_SEESAW_BLOCK: 200000
 };
@@ -14,12 +14,12 @@ const blocksPerMonth = (blocksPerDay * 365.25) / 12; // 29220
 
 const blocksPerYear = blocksPerDay * 365.25; // 350640
 
-const mncoins = 5000.0;
+const colateral = 5000.0;
 
 const getMNBlocksPerDay = (mns) => {
     return blocksPerDay / mns;
 };
-const gettotalSupply = 1000000;
+const totalSupply = 1000000;
 const getMNBlocksPerWeek = (mns) => {
     return getMNBlocksPerDay(mns) * (365.25 / 52);
 };
@@ -304,9 +304,9 @@ const getSubsidy = (nHeight = 1) => {
     return nHeight >= params.RAMP_TO_BLOCK ? nSubsidy : nSlowSubsidy;
 };
 
-const getROI = (subsidy, mns) => {
-    return ((getMNBlocksPerYear(mns) * subsidy) / mncoins) * 100.0;
-};
+// const getROI = (subsidy, mns) => {
+//     return ((getMNBlocksPerYear(mns) * subsidy) / mncoins) * 100.0;
+// };
 
 const isAddress = (s) => {
     return typeof (s) === 'string' && s.length === 34;
@@ -340,13 +340,13 @@ const isRewardRawTransaction = (rpctx) => {
 }
 
 module.exports = {
-    gettotalSupply,
+    totalSupply,
     avgBlockTime,
     blocksPerDay,
     blocksPerMonth,
     blocksPerWeek,
     blocksPerYear,
-    mncoins,
+    colateral,
     params,
     getMNBlocksPerDay,
     getMNBlocksPerMonth,
@@ -354,7 +354,7 @@ module.exports = {
     getMNBlocksPerYear,
     getMNSubsidy,
     getSubsidy,
-    getROI,
+    // getROI,
     isAddress,
     isBlock,
     isPoS,
