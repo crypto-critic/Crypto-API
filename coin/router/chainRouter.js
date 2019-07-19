@@ -1,5 +1,5 @@
 const moment = require('moment');
-const cache = require('../../lib/cache');
+const cache = require('../../library/cache');
 module.exports =  (coin) => {
     const rpc =  coin.rpc;
     const Block = coin.block;
@@ -36,7 +36,7 @@ module.exports =  (coin) => {
     };
     const totalSupply = (req, res) =>{
         let totalSupply = chain.totalSupply;
-        res.json({totalsupply})
+        res.json({totalSupply})
     };
     return {
         chainBlockTime,
