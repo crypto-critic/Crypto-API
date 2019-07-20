@@ -8,15 +8,17 @@ const settings = require('../initial/settings');
 
 const setupCoin = async (coinId, coinLink, rpcPort) => {
     let destination = path.resolve(indexPath, `services/${coinId}.sh`);
-
     let data = 
     `echo "Installing ${coinId}..."\n`
     + `mkdir -p ${indexPath}/bin/${coinId}\n`
     + `cd ${indexPath}/bin/${coinId}\n`
     + `curl -Lo ${coinId}.tar.gz ${coinLink}\n`
     + `tar -xzf ${coinId}.tar.gz\n`
-    + `find ./ -name '${coinId}' -exec mv -t ./ {} +\n`
+    + `find ./ -name '*${coinId}*' -exec mv -t ./ {} +\n`
+    + `find ./ -type d -name "*${coinId}*" -exec rm -r "{}" +\n`
+    + `find ./ -name "*.tar.gz" -exec rm -rf {} +\n`
     + `\n`
+    + `mkdir -p ${indexPath}/bin/.${coinId}\n`
     + `sudo cat > ${indexPath}/bin/.${coinId}/${coinId}.conf << EOL\n`
     + `rpcport=${rpcPort}\n`
     + `rpcuser=${settings.dbsettings.user}\n`
@@ -45,9 +47,15 @@ const setupCoin = async (coinId, coinLink, rpcPort) => {
     + `echo "Sleeping for 1 hour while node syncs blockchain..."\n`
     + `sleep 1h\n`
     + `clear\n`
-    await fs.writeFile(destination, data, 'utf8', (err)=>{console.log(err)});
+    await fs.writeFile(destination, data, 'utf8', (err)=>{
+        fs.chmod(destination, 0777, ()=>console.log('Change permission!'));
+    });
+    
 
     // spawn('mongo', [`localhost:27017/${coin}`, `${destination}`], {stdio: 'inherit'})
 };
-setupCoin('awardcoin', 'http://git', 10000);
+
+let link = 'https://github.com/awardprj/AwardCoin/releases/download/v1.0.0.0/awardcoin-1.0.0-x86_64-linux-gnu.tar.gz'
+
+setupCoin('awardcoin', link, 19915);
 module.exports = setupCoin;
