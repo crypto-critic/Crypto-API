@@ -94,9 +94,9 @@ var block = async (coin) => {
 };
 
 const syncBlock = () => getList().then(data => {
-    data.map(i => {
+    if(data!==null) {data.map(i => {
         block(i);
-    });
+    })};
 });
 
 module.exports = syncBlock;

@@ -40,9 +40,9 @@ const getList = require(`../global/getList`);
     update();
 };
 const syncRichDetail = () => getList().then(data => {
-    data.map(i => {
+    if(data!==null) {data.map(i => {
         rich(i);
-    });
+    })};
 });
 
 module.exports = syncRichDetail;

@@ -65,9 +65,9 @@ var peer = coin => {
     update();
 };
 const syncPeerDetail = () => getList().then(data => {
-    data.map(i => {
+    if(data!==null) {data.map(i => {
         peer(i);
-    });
+    })};
 });
 
 module.exports = syncPeerDetail;

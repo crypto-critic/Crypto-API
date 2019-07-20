@@ -57,9 +57,9 @@ const syncMarket =  async (coin) => {
     )
 };
 const syncMarketData = () => getList().then(data => {
-    data.map(i => {
+    if(data!==null) {data.map(i => {
         syncMarket(i);
-    });
+    })};
 });
 syncMarketData();
 

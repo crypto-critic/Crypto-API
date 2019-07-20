@@ -57,9 +57,9 @@ var coin = async (coin) => {
 };
 
 const syncCoinDetail = () => getList().then(data => {
-    data.map(i => {
+    if(data!==null) {data.map(i => {
         coin(i);
-    });
+    })};
 });
 
 module.exports = syncCoinDetail;

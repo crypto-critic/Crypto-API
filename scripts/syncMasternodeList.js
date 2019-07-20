@@ -57,9 +57,9 @@ var masternode = async (coin) => {
     update();
 };
 const syncMasternodeDetail = () => getList().then(data => {
-    data.map(i => {
+    if(data!==null) {data.map(i => {
         masternode(i);
-    });
+    })};
 });
 
 module.exports = syncMasternodeDetail;
