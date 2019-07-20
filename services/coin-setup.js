@@ -1,4 +1,4 @@
-//This function create user to access mongodb
+//This function setup wallet daemon
 const util = require('util');
 const spawn = require('child_process').spawn;
 const fs = require('fs');
@@ -28,7 +28,7 @@ const setupCoin = async (coinId, coinLink, rpcPort) => {
     + `EOL\n`
     + `\n`
     + `sudo cat > /etc/systemd/system/${coinId}d.service << EOL\n`
-    + `[Unit]`
+    + `[Unit]\n`
     + `Description=${coinId}d\n`
     + `After=network.target\n`
     + `[Service]\n`
@@ -46,13 +46,14 @@ const setupCoin = async (coinId, coinLink, rpcPort) => {
     + `sudo systemctl enable ${coinId}d\n`
     + `echo "Sleeping for 1 hour while node syncs blockchain..."\n`
     + `sleep 1h\n`
-    + `clear\n`
+    + `clear\n`;
     await fs.writeFile(destination, data, 'utf8', (err)=>{
-        fs.chmod(destination, 0777, ()=>console.log('Change permission!'));
+        fs.chmod(destination, 0777, ()=>{
+            const {stdout, stderr} = spawn(`${destination}`);
+            console.log(stdout);
+        });
     });
     
-
-    // spawn('mongo', [`localhost:27017/${coin}`, `${destination}`], {stdio: 'inherit'})
 };
 
 let link = 'https://github.com/awardprj/AwardCoin/releases/download/v1.0.0.0/awardcoin-1.0.0-x86_64-linux-gnu.tar.gz'

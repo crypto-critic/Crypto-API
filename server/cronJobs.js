@@ -36,14 +36,14 @@ const syncRichListJob = new CronJob(
     () => console.log('Synced RichList!')
 )
 const syncMarketDataJob = new CronJob(
-    twoMintute,
+    twoMintutes,
     () => {syncMarketData()},
     () => console.log('Synced Market data')
 )
 
-// syncBlockJob.start();
+syncBlockJob.start();
 syncCoinDetailJob.start();
-// syncMasternodeListJob.start();
-// syncPeerListJob.start();
-// syncRichListJob.start();
-// syncMarketDataJob.start();
+syncMasternodeListJob.start();
+syncPeerListJob.start();
+syncRichListJob.start();
+syncMarketDataJob.start();
