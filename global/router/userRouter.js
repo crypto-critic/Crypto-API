@@ -8,43 +8,43 @@ const settings = require('../../initial/settings');
 const fs = require('fs');
 const path = require('path');
 const indexPath = fs.realpathSync(process.cwd());
-const setupMongoDb = require('../../services/mongo-setup');
-const setupCoin = require('../../services/coin-setup');
+const setupMongoDb = require('../../services/setupMongoDb');
+const installCoin = require('../../services/installCoin');
 
 module.exports = (router)=>{
-    router.post('/users/register', async (req, res) => {
-        User.findOne({
-            email: req.body.email
-        }).then(user => {
-            if(user) {
-                return res.status(400).json({
-                    email: 'Email already exists'
-                });
-            }
-            else {
-                bcrypt.genSalt(10, (err, salt) => {
-                    if(err) console.error('There was an error', err);
-                    else {
-                        bcrypt.hash(req.body.password, salt, (err, hash) => {
-                            if(err) console.error('There was an error', err);
-                            else {
-                                const newUser = new User({
-                                    _id: new mongoose.Types.ObjectId,
-                                    email: req.body.email,
-                                    password: hash,
-                                });
-                                newUser
-                                    .save()
-                                    .then(user => {
-                                        res.json(user)
-                                    });
-                            }
-                        });
-                    }
-                });
-            }
-        });
-    });
+    // router.post('/users/register', async (req, res) => {
+    //     User.findOne({
+    //         email: req.body.email
+    //     }).then(user => {
+    //         if(user) {
+    //             return res.status(400).json({
+    //                 email: 'Email already exists'
+    //             });
+    //         }
+    //         else {
+    //             bcrypt.genSalt(10, (err, salt) => {
+    //                 if(err) console.error('There was an error', err);
+    //                 else {
+    //                     bcrypt.hash(req.body.password, salt, (err, hash) => {
+    //                         if(err) console.error('There was an error', err);
+    //                         else {
+    //                             const newUser = new User({
+    //                                 _id: new mongoose.Types.ObjectId,
+    //                                 email: req.body.email,
+    //                                 password: hash,
+    //                             });
+    //                             newUser
+    //                                 .save()
+    //                                 .then(user => {
+    //                                     res.json(user)
+    //                                 });
+    //                         }
+    //                     });
+    //                 }
+    //             });
+    //         }
+    //     });
+    // });
 
     router.post('/users/login', (req, res) => {
         const email = req.body.email;
@@ -114,8 +114,7 @@ module.exports = (router)=>{
                 },
                 wallet
             });
-            setupCoin(coinId, req.body.link, req.body.port).then(()=>{
-                console.log('ok')
+            installCoin(coinId, req.body.link, req.body.port).then(()=>{
                 List.update({coinId},{$set: {active: true}}, (err)=>{
                     if (err) {res.status(401).json({status: 'error', message: ''})};
                     res.status(401).json({status: 'success', message: 'uploaded'})
@@ -124,6 +123,19 @@ module.exports = (router)=>{
         } else {
             res.status(401).json({status: 'error', message: 'coin already exist!'})
         }
+        
+    });
+    router.get('/users/setupChainVariables', passport.authenticate('jwt', { session: false }),  async (req, res) => {
+        fs.readFile(path.resolve(indexPath, 'initial/templatechain.js'), 'utf-8', (err, data)=>{
+            res.send(data);
+        })
+    });
 
+    router.post('/users/setupChainVariables', passport.authenticate('jwt', { session: false }),  async (req, res) => {
+        let coinId = req.body.coinId;
+        let data = req.body.data;
+        fs.writeFile(path.resolve(indexPath, `initial/${coinId}chain.js`), data, (err)=>{
+            if(!err) {res.status(200).json({status: 'success', message: `created ${coinId}chain.js`})};
+        })
     });
 };
