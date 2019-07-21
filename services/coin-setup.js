@@ -1,6 +1,6 @@
 //This function setup wallet daemon
 const util = require('util');
-const spawn = require('child_process').spawn;
+const spawn = util.promisify(require('child_process').spawn);
 const fs = require('fs');
 const path = require('path');
 const indexPath = fs.realpathSync(process.cwd());
@@ -14,9 +14,9 @@ const setupCoin = async (coinId, coinLink, rpcPort) => {
     + `cd ${indexPath}/bin/${coinId}\n`
     + `curl -Lo ${coinId}.tar.gz ${coinLink}\n`
     + `tar -xzf ${coinId}.tar.gz\n`
-    + `find ./ -name '*${coinId}*' -exec mv -t ./ {} +\n`
-    + `find ./ -type d -name "*${coinId}*" -exec rm -r "{}" +\n`
+    + `find . -name "*${coinId}*" -print0 | xargs -0 -I {} mv {} .\n`
     + `find ./ -name "*.tar.gz" -exec rm -rf {} +\n`
+    + `find ./ -type d -name "*${coinId}*" -exec rm -rf {} +\n`
     + `\n`
     + `mkdir -p ${indexPath}/bin/.${coinId}\n`
     + `sudo cat > ${indexPath}/bin/.${coinId}/${coinId}.conf << EOL\n`
@@ -48,15 +48,16 @@ const setupCoin = async (coinId, coinLink, rpcPort) => {
     + `sleep 1h\n`
     + `clear\n`;
     await fs.writeFile(destination, data, 'utf8', (err)=>{
-        fs.chmod(destination, 0777, ()=>{
-            const {stdout, stderr} = spawn(`${destination}`);
-            console.log(stdout);
-        });
+        fs.chmod(destination, 0777)
     });
-    
+    await spawn(`bash`, [`${destination}`], {
+        cwd: process.cwd(),
+        detached: true,
+        stdio: 'inherit'
+    })
 };
 
-let link = 'https://github.com/awardprj/AwardCoin/releases/download/v1.0.0.0/awardcoin-1.0.0-x86_64-linux-gnu.tar.gz'
+// let link = 'https://github.com/awardprj/AwardCoin/releases/download/v1.0.0.0/awardcoin-1.0.0-x86_64-linux-gnu.tar.gz'
 
-setupCoin('awardcoin', link, 19915);
+// setupCoin('awardcoin', link, 19915);
 module.exports = setupCoin;
