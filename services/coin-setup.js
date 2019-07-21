@@ -33,7 +33,7 @@ const setupCoin = async (coinId, coinLink, rpcPort) => {
     + `After=network.target\n`
     + `[Service]\n`
     + `Type=forking\n`
-    + `User=explorer\n`
+    + `User=root\n`
     + `WorkingDirectory=${indexPath}\n`
     + `ExecStart=${indexPath}/bin/${coinId}/${coinId}d -datadir=${indexPath}/bin/.${coinId}\n`
     + `ExecStop=${indexPath}/bin/${coinId}/${coinId}-cli -datadir=${indexPath}/bin/.${coinId} stop\n`
