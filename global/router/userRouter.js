@@ -9,6 +9,7 @@ const fs = require('fs');
 const path = require('path');
 const indexPath = fs.realpathSync(process.cwd());
 const setupMongoDb = require('../../services/mongo-setup');
+const setupCoin = require('../../services/coin-setup');
 
 module.exports = (router)=>{
     router.post('/users/register', async (req, res) => {
@@ -96,7 +97,7 @@ module.exports = (router)=>{
             await List.create({
                 coinId,
                 name: req.body.name || coinTd,
-                active: req.body.active || true,
+                active: false,
                 category: req.body.category || 'masternode',
                 symbol: req.body.symbol || coinId,
                 links: {
@@ -113,7 +114,13 @@ module.exports = (router)=>{
                 },
                 wallet
             });
-            res.status(401).json({status: 'success', message: 'uploaded'})
+            setupCoin(coinId, req.body.link, req.body.port).then(()=>{
+                console.log('ok')
+                List.update({coinId},{$set: {active: true}}, (err)=>{
+                    if (err) {res.status(401).json({status: 'error', message: ''})};
+                    res.status(401).json({status: 'success', message: 'uploaded'})
+                });
+            })
         } else {
             res.status(401).json({status: 'error', message: 'coin already exist!'})
         }
