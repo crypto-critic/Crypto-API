@@ -25,3 +25,6 @@ sudo apt-get install -y apt-transport-https build-essential cron curl gcc git g+
 clear
 
 installNodeAndYarn
+npm install
+clear
+npm start
