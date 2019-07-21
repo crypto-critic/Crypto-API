@@ -6,7 +6,7 @@ const ListSchema = new Schema({
     coinId: { type: String, unique: true, index: true},
     name: { type: String, require: true},
     port: { type: String, require: true},
-    active: { type: Boolean, default: true},
+    active: { type: Boolean, default: false},
     genesis_date: {type: Date, default: null},
     localization:  locale,
     category: { type: String, default: 'masternode'},
