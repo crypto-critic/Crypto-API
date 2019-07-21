@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "p2 start ./server/index.js",
-    "stop": "p2 stop ./server/index.js",
+    "start": "pm2 start ./server/index.js",
+    "stop": "pm2 stop ./server/index.js",
     "dev": "node ./server/index.js"
   },
   "dependencies": {
