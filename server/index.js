@@ -1,13 +1,10 @@
 require('babel-polyfill');
 
-const setupMongoDb = require('../services/setupMongoDb');
 const getList = require('../global/getList');
 const config = require('../initial/settings');
 const express = require('express');
 const middleware = require('./middleware');
 const app = express();
-setupMongoDb('global');
-require('../services/registerUser');
 middleware(app);
 
 let router = express.Router();

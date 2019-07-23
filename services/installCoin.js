@@ -57,7 +57,4 @@ const setupCoin = async (coinId, coinLink, rpcPort) => {
     })
 };
 
-// let link = 'https://github.com/awardprj/AwardCoin/releases/download/v1.0.0.0/awardcoin-1.0.0-x86_64-linux-gnu.tar.gz'
-
-// setupCoin('awardcoin', link, 19915);
 module.exports = setupCoin;

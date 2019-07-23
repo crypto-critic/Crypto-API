@@ -27,4 +27,6 @@ clear
 installNodeAndYarn
 npm install
 clear
+node ./services/setupGlobalMongoUser.js
+node ./services/registerUser.js
 npm start

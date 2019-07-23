@@ -8,7 +8,7 @@ const pm2Config = {
       },
       {
         "name": "cronJob",
-        "script": "./server/cronJobs.js",
+        "script": "./services/cronJobs.js",
         "instances": 2
       }
     ]
