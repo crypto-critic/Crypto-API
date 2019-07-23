@@ -27,7 +27,7 @@ User.findOne({email}).then(user => {
                         newUser
                             .save()
                             .then(user => {
-                                res.json(user)
+                                console.log('global user success');
                             });
                     }
                 });
