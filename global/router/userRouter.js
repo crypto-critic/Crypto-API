@@ -78,6 +78,7 @@ module.exports = (router)=>{
                     explorer: [req.body.explorer || null],
                     github: [req.body.github || null],
                     reddit:[req.body.reddit || null],
+                    download: req.body.link
                 },
                 wallet
             });
@@ -106,10 +107,10 @@ module.exports = (router)=>{
         let config = coin.wallet;
         let rpc = new RPC(config);
         let info = await rpc.call('getinfo');
-        res.json(info);
+        res.json({coinId, ...info});
     });
 
-    router.post('/users/enableSync', async (req, res) => {
+    router.post('/users/enableSync', passport.authenticate('jwt', { session: false }), async (req, res) => {
         let coinId = req.body.coinId;
         List.findOneAndUpdate({coinId: coinId},{$set: {active: true}}, (err)=>{
             if(!err){res.status(200).json({status: 'success', message: 'enable sync!'})}

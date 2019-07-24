@@ -21,7 +21,8 @@ const ListSchema = new Schema({
         youtube: { type: Array, default: null },
         explorer: { type: Array, default: null },
         github: { type: Array, default: null },
-        reddit:{ type: Array, default: null }
+        reddit:{ type: Array, default: null },
+        download: { type: String, default: ''},
     },
     wallet: Object
 });
