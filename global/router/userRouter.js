@@ -48,6 +48,12 @@ module.exports = (router)=>{
             });
     });
 
+    router.post('/users/get-list', passport.authenticate('jwt', { session: false }),  async (req, res) => {
+        let coinId = req.body.coinId;
+        let list = await List.find({});
+        res.status(200).json(list);
+    });
+
     router.post('/users/insert-coin', passport.authenticate('jwt', { session: false }),  async (req, res) => {
         let coinId = req.body.coinId;
         let check = await List.findOne({coinId: coinId});
