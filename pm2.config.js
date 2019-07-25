@@ -4,12 +4,14 @@ const pm2Config = {
         "name": "app",
         "script": "./server/index.js",
         "exec_mode": "cluster_mode",
-        "instances": "max"
+        "instances": 1,
+        "watch": true
       },
       {
         "name": "cronJob",
         "script": "./services/cronJobs.js",
-        "instances": 2
+        "instances": 2,
+        "watch": true
       }
     ]
 };
