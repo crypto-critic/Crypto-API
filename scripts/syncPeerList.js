@@ -38,7 +38,7 @@ var peer = coin => {
         });
 
         if (inserts.length) {
-            await Peer.remove({});
+            await Peer.deleteMany,({});
             await Peer.insertMany(inserts);
         }
     }

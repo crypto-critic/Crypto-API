@@ -19,8 +19,8 @@ module.exports = (router)=>{
         User.findOne({email})
             .then(user => {
                 if(!user) {
-                    errors.email = 'User not found';
-                    return res.status(404).json(errors);
+                    res.status(404).json({status: 'error', message: 'User not found!'});
+                    return;
                 }
                 bcrypt.compare(password, user.password)
                     .then(isMatch => {
@@ -42,14 +42,13 @@ module.exports = (router)=>{
                             });
                         }
                         else {
-                            errors.password = 'Incorrect Password';
-                            return res.status(400).json(errors);
+                            res.status(400).json({status: 'error', message: 'Password do not match!'});
                         }
                     });
             });
     });
 
-    router.post('/users/insertCoin', passport.authenticate('jwt', { session: false }),  async (req, res) => {
+    router.post('/users/insert-coin', passport.authenticate('jwt', { session: false }),  async (req, res) => {
         let coinId = req.body.coinId;
         let check = await List.findOne({coinId: coinId});
         if (check === null) {
@@ -63,6 +62,7 @@ module.exports = (router)=>{
             };
             await List.create({
                 coinId,
+                marketId: req.body.marketId || coinId,
                 name: req.body.name || coinTd,
                 active: false,
                 category: req.body.category || 'masternode',
@@ -89,11 +89,12 @@ module.exports = (router)=>{
         
     });
 
-    router.post('/users/setupCoin', passport.authenticate('jwt', { session: false }),  async (req, res) => {
+    router.post('/users/setup-coin', passport.authenticate('jwt', { session: false }),  async (req, res) => {
         let coinId = req.body.coinId;
-        let check = await List.findOne({coinId: coinId, active: true});
-        if (check === null) {
-            installCoin(coinId, req.body.link, req.body.port)
+        let check = await List.findOne({coinId: coinId});
+        console.log(coinId, check.links.download, check.wallet.port)
+        if (check.active === false) {
+            installCoin(coinId, check.links.download, check.wallet.port)
                 .then(()=> res.status(200).json({status: 'success', message: 'setup coin success'}))
                 .catch(err => res.status(400).json({status: 'error', message: err.message}))
         } else {
@@ -101,7 +102,7 @@ module.exports = (router)=>{
         }
     });
 
-    router.post('/users/testSetup', async (req, res) => {
+    router.post('/users/test-setup', async (req, res) => {
         let coinId = req.body.coinId;
         let coin = await List.findOne({coinId});
         let config = coin.wallet;
@@ -110,25 +111,25 @@ module.exports = (router)=>{
         res.json({coinId, ...info});
     });
 
-    router.post('/users/enableSync', passport.authenticate('jwt', { session: false }), async (req, res) => {
+    router.post('/users/enable-sync', passport.authenticate('jwt', { session: false }), async (req, res) => {
         let coinId = req.body.coinId;
         List.findOneAndUpdate({coinId: coinId},{$set: {active: true}}, (err)=>{
             if(!err){res.status(200).json({status: 'success', message: 'enable sync!'})}
         });
     });
 
-    router.post('/users/setupChain/readFile', passport.authenticate('jwt', { session: false }),  async (req, res) => {
+    router.post('/users/setup-chain/read-file', passport.authenticate('jwt', { session: false }),  async (req, res) => {
         let coinId = req.body.coinId;
-        fs.readFile(path.resolve(indexPath, `initial/${coinId}chain.js`), 'utf-8', (err, data)=>{
+        fs.readFile(path.resolve(indexPath, `initial/${coinId}.chain.js`), 'utf-8', (err, data)=>{
             res.send(data);
         })
     });
 
-    router.post('/users/setupChain/saveFile', passport.authenticate('jwt', { session: false }),  async (req, res) => {
+    router.post('/users/setupChain/save-file', passport.authenticate('jwt', { session: false }),  async (req, res) => {
         let coinId = req.body.coinId;
         let data = req.body.data;
-        fs.writeFile(path.resolve(indexPath, `initial/${coinId}chain.js`), data, (err)=>{
-            if(!err) {res.status(200).json({status: 'success', message: `created ${coinId}chain.js`})};
+        fs.writeFile(path.resolve(indexPath, `initial/${coinId}.chain.js`), data, (err)=>{
+            if(!err) {res.status(200).json({status: 'success', message: `created ${coinId}.chain.js`})};
         })
     });
 };

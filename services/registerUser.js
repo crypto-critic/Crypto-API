@@ -8,15 +8,14 @@ let password = settings.user.password;
 
 User.findOne({email}).then(user => {
     if(user) {
-        return res.status(400).json({
-            email: 'Email already exists'
-        });
+        console.log('User exist!')
+        process.exit();
     }
     else {
         bcrypt.genSalt(10, (err, salt) => {
             if(err) console.error('There was an error', err);
             else {
-                bcrypt.hash(password, salt, (err, hash) => {
+                bcrypt.hash(password, salt, async (err, hash) => {
                     if(err) console.error('There was an error', err);
                     else {
                         const newUser = new User({
@@ -24,11 +23,12 @@ User.findOne({email}).then(user => {
                             email,
                             password: hash,
                         });
-                        newUser
+                        await newUser
                             .save()
                             .then(user => {
-                                console.log('global user success');
+                                console.log('Setup global user success');
                             });
+                        process.exit();
                     }
                 });
             }

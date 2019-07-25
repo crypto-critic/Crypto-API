@@ -5,18 +5,19 @@ const locker = require('../library/locker');
 const getList = require(`../global/getList`);
 const Coin = require('../coin/coin');
 
-var block = async (coin) => {
-    var blockchain = await require(`../initial/${coin.coinId}chain`);
-    var util = await require('./util')(coin);
-    var Block = await coin.block;
-    var TX = await coin.tx;
-    var UTXO = await coin.utxo;
-    var rpc = await coin.rpc;
+const block = async (coin) => {
+    let blockchain = await require(`../initial/${coin.coinId}.chain`);
+    console.log(`../initial/${coin.coinId}.chain`)
+    let util = await require('./util')(coin);
+    let Block = await coin.block;
+    let TX = await coin.tx;
+    let UTXO = await coin.utxo;
+    let rpc = await coin.rpc;
     async function syncBlocks(start, stop, clean = false) {
         if (clean) {
-            await Block.remove({ height: { $gte: start, $lte: stop } });
-            await TX.remove({ blockHeight: { $gte: start, $lte: stop } });
-            await UTXO.remove({ blockHeight: { $gte: start, $lte: stop } });
+            await Block.deleteMany({ height: { $gte: start, $lte: stop } });
+            await TX.deleteMany({ blockHeight: { $gte: start, $lte: stop } });
+            await UTXO.deleteMany({ blockHeight: { $gte: start, $lte: stop } });
         }
         let block;
         for (let height = start; height <= stop; height++) {
@@ -38,12 +39,12 @@ var block = async (coin) => {
             });
             await block.save();
             await forEachSeries(block.txs, async(txhash) => {
-                const rpctx = await util.getTX(txhash);
+                const rpctx = await util.getTX(txhash, true);
                 if (blockchain.isPoS(block)) {
-                    console.log(height+ ' POS');
+                    console.log(coin.coinId, ' POS ', height);
                     await util.addPoS(block, rpctx);
                 } else {
-                    console.log(height + ' POW');
+                    console.log(coin.coinId, ' POS ', height);
                     await util.addPoW(block, rpctx);
                 }
             });
@@ -95,7 +96,7 @@ var block = async (coin) => {
 
 const syncBlock = () => getList().then(data => {
     if(data!==null) {data.map(i => {
-        block(i);
+        // block(i);
     })};
 });
 

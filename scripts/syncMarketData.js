@@ -8,11 +8,12 @@ const syncMarket =  async (coin) => {
     const UTXO = coin.utxo;
     const Coin = coin.coin;
     const Rpc = coin.rpc;
-    const chain = await require(`../initial/${coin.coinId}chain`);
+    const chain = await require(`../initial/${coin.coinId}.chain`);
 
     let coinCollection = await Coin.findOne().sort({ createdAt: -1 });
     let coinId = coin.coinId;
-    let data = await getDataFromCoingecko(coin.coinId);
+    let marketId = coin.marketId;
+    let data = await getDataFromCoingecko(coin.marketId);
     let market_data = data.market_data;
     let info = Rpc.call('getinfo');
     let nHeight = info.blocks;
