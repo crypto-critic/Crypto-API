@@ -1,6 +1,6 @@
 require('babel-polyfill');
-const exit = require('../lib/exit');
-const locker = require('../lib/locker');
+const exit = require('../library/exit');
+const locker = require('../library/locker');
 
 module.exports = async (coin) => {
     const Coin = await coin.coin;

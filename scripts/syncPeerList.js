@@ -1,9 +1,9 @@
 require('babel-polyfill');
 const config = require('../initial/settings');
-const exit = require('../lib/exit');
-const fetch = require('../lib/fetch');
+const exit = require('../library/exit');
+const fetch = require('../library/fetch');
 const { forEach } = require('p-iteration');
-const locker = require('../lib/locker');
+const locker = require('../library/locker');
 const moment = require('moment');
 const getList = require(`../global/getList`);
 // Models.
@@ -38,7 +38,7 @@ var peer = coin => {
         });
 
         if (inserts.length) {
-            await Peer.remove({});
+            await Peer.deleteMany({});
             await Peer.insertMany(inserts);
         }
     }
@@ -65,9 +65,9 @@ var peer = coin => {
     update();
 };
 const syncPeerDetail = () => getList().then(data => {
-    data.map(i => {
+    if(data!==null) {data.map(i => {
         peer(i);
-    });
+    })};
 });
 
 module.exports = syncPeerDetail;

@@ -1,12 +1,9 @@
 require('babel-polyfill');
-const exit = require('../lib/exit');
-const fetch = require('../lib/fetch');
-const locker = require('../lib/locker');
+const exit = require('../library/exit');
+const fetch = require('../library/fetch');
+const locker = require('../library/locker');
 const moment = require('moment');
 const getList = require(`../global/getList`);
-const CronJob = require('cron').CronJob;
-
-const everyMintute = '0 * * * * *' // Job every minute
 
 var coin = async (coin) => {
     const Rich = await coin.rich;
@@ -18,7 +15,7 @@ var coin = async (coin) => {
         const masternodes = await rpc.call('getmasternodecount');
         const nethashps = await rpc.call('getnetworkhashps');
         var activewallets = 0;
-        await Rich.find({ 'value': { $gt: 0 } }).count(function(err, count) {
+        await Rich.find({ 'value': { $gt: 0 } }).countDocuments(function(err, count) {
             if (err) { console.log(err) }
             activewallets = count;
         });
@@ -60,9 +57,9 @@ var coin = async (coin) => {
 };
 
 const syncCoinDetail = () => getList().then(data => {
-    data.map(i => {
+    if(data!==null) {data.map(i => {
         coin(i);
-    });
+    })};
 });
 
 module.exports = syncCoinDetail;

@@ -4,9 +4,10 @@ const GlobalConnection = require('../globalConnection');
 const locale = require ('./locale_style');
 const ListSchema = new Schema({
     coinId: { type: String, unique: true, index: true},
+    marketId: { type: String, unique: true},
     name: { type: String, require: true},
     port: { type: String, require: true},
-    active: { type: Boolean, default: true},
+    active: { type: Boolean, default: false},
     genesis_date: {type: Date, default: null},
     localization:  locale,
     category: { type: String, default: 'masternode'},
@@ -21,7 +22,8 @@ const ListSchema = new Schema({
         youtube: { type: Array, default: null },
         explorer: { type: Array, default: null },
         github: { type: Array, default: null },
-        reddit:{ type: Array, default: null }
+        reddit:{ type: Array, default: null },
+        download: { type: String, default: ''},
     },
     wallet: Object
 });

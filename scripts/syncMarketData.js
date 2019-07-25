@@ -1,6 +1,6 @@
 const getList = require(`../global/getList`);
-const getDataFromCoingecko = require('../lib/getDataFromCoingecko');
-const cache = require('../lib/cache');
+const getDataFromCoingecko = require('../library/getDataFromCoingecko');
+const cache = require('../library/cache');
 const moment = require('moment');
 
 const syncMarket =  async (coin) => {
@@ -8,11 +8,12 @@ const syncMarket =  async (coin) => {
     const UTXO = coin.utxo;
     const Coin = coin.coin;
     const Rpc = coin.rpc;
-    const chain = await require(`../initial/${coin.coinId}chain`);
+    const chain = await require(`../initial/${coin.coinId}.chain`);
 
     let coinCollection = await Coin.findOne().sort({ createdAt: -1 });
     let coinId = coin.coinId;
-    let data = await getDataFromCoingecko(coin.coinId);
+    let marketId = coin.marketId;
+    let data = await getDataFromCoingecko(coin.marketId);
     let market_data = data.market_data;
     let info = Rpc.call('getinfo');
     let nHeight = info.blocks;
@@ -57,9 +58,9 @@ const syncMarket =  async (coin) => {
     )
 };
 const syncMarketData = () => getList().then(data => {
-    data.map(i => {
+    if(data!==null) {data.map(i => {
         syncMarket(i);
-    });
+    })};
 });
 syncMarketData();
 

@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "forever start ./server/index.js"
+    "start": "pm2 start pm2.config.js",
+    "stop": "pm2 stop pm2.config.js",
+    "dev": "node ./server/index.js"
   },
   "dependencies": {
     "axios": "^0.19.0",

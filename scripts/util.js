@@ -1,7 +1,7 @@
 require('babel-polyfill');
 var  mongoose = require('mongoose');
 module.exports = async (coin) => {
-    const blockchain = require(`../initial/${coin.coinId}chain`)
+    const blockchain = require(`../initial/${coin.coinId}.chain`)
     const rpc = await coin.rpc;
     const TX = await coin.tx;
     const UTXO = await coin.utxo;
@@ -10,7 +10,6 @@ module.exports = async (coin) => {
         // Setup the input list for the transaction.
         const txin = [];
         if (rpctx.vin) {
-
             // Figure out what txIds are used in all the inputs
             const usedTxIdsInVins = new Set();
             rpctx.vin.forEach((vin) => {
@@ -18,7 +17,6 @@ module.exports = async (coin) => {
                     usedTxIdsInVins.add(vin.txid);
                 }
             });
-
             const usedTxs = await TX.find({ txId: { $in: Array.from(usedTxIdsInVins)}}, { txId: 1, vout: 1, blockHeight: 1, createdAt: 1 }); // Only include vout, blockHeight & createdAt fields that we need
             const txIds = new Set();
             rpctx.vin.forEach((vin) => {
@@ -66,7 +64,7 @@ module.exports = async (coin) => {
             });
             // Remove unspent transactions.
             if (txIds.size) {
-                await UTXO.remove({ _id: { $in: Array.from(txIds) } });
+                await UTXO.deleteMany({ _id: { $in: Array.from(txIds) } });
             }
         }
         return txin;
@@ -169,9 +167,7 @@ module.exports = async (coin) => {
 
                 // Find details of the staked input
                 const stakedInputRawTx = await getTX(stakeInputTxId, true); // true for verbose output so we can get time & confirmations
-
                 const stakedInputRawTxVout = stakedInputRawTx.vout[stakedTxVoutIndex];
-
                 const stakeInputValue = stakedInputRawTxVout.value;
                 const stakedInputConfirmations = stakedInputRawTx.confirmations - rpctx.confirmations; // How many confirmations did we get on staked input before the stake occured (subtract the new tx confirmations)
                 const stakedInputTime = stakedInputRawTx.time;

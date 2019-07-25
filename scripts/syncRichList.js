@@ -1,13 +1,13 @@
 require('babel-polyfill');
-const exit = require('../lib/exit');
-const locker = require('../lib/locker');
+const exit = require('../library/exit');
+const locker = require('../library/locker');
 const getList = require(`../global/getList`);
  var rich = async coin => {
     // Models.
     const Rich = await coin.rich;
     const UTXO = await coin.utxo;
     async function syncRich() {
-        await Rich.remove({});
+        await Rich.deleteMany({});
         const addresses = await UTXO.aggregate([
             { $group: { _id: '$address', sum: { $sum: '$value' } } },
             { $sort: { sum: -1 } }
@@ -40,9 +40,9 @@ const getList = require(`../global/getList`);
     update();
 };
 const syncRichDetail = () => getList().then(data => {
-    data.map(i => {
+    if(data!==null) {data.map(i => {
         rich(i);
-    });
+    })};
 });
 
 module.exports = syncRichDetail;

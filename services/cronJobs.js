@@ -8,7 +8,7 @@ const CronJob = require('cron').CronJob;
 
 const everyMintute = '*/1 * * * *' // Job every minute
 const twoMintutes = '*/2 * * * *' // Job 2 mitutes
-const fiveMintutes = '*/5 * * * *' // Job 5 mitutes
+const fourMintutes = '*/4 * * * *' // Job 4 mitutes
 
 const syncBlockJob = new CronJob(
     everyMintute,
@@ -16,8 +16,8 @@ const syncBlockJob = new CronJob(
     () => console.log('Synced Block!')
 )
 const syncCoinDetailJob = new CronJob(
-    fiveMintutes,
-    () => {syncCoinDetail()},
+    twoMintutes,
+    () => {console.log('s')},
     () => console.log('Synced CoinDetail!')
 )
 const syncMasternodeListJob = new CronJob(
@@ -26,12 +26,12 @@ const syncMasternodeListJob = new CronJob(
     () => console.log('Synced MasternodeList!')
 )
 const syncPeerListJob = new CronJob(
-    fiveMintutes,
+    fourMintutes,
     () => {syncPeerList()},
     () => console.log('Synced PeerList!')
 )
 const syncRichListJob = new CronJob(
-    fiveMintutes,
+    fourMintutes,
     () => {syncRichList()},
     () => console.log('Synced RichList!')
 )

@@ -1,6 +1,6 @@
 const { forEach } = require('p-iteration');
 const moment = require('moment');
-const cache = require('../../lib/cache');
+const cache = require('../../library/cache');
 module.exports = (coin) => {
     var TX = coin.tx;
     var UTXO = coin.utxo;
@@ -64,7 +64,7 @@ module.exports = (coin) => {
      * @param {Object} req The request object.
      * @param {Object} res The response object.
      */
-    const getAvgBlockTime = async (req, res) => {
+    const get = async (req, res) => {
         // When does the cache expire.
         // For now this is hard coded.
         let cache = 90.0;
@@ -77,7 +77,7 @@ module.exports = (coin) => {
 
             try {
                 const date = moment.utc().subtract(24, 'hours').toDate();
-                const blocksCount = await Block.count({ createdAt: { $gt: date } });
+                const blocksCount = await Block.countDocumentsDocuments({ createdAt: { $gt: date } });
                 const seconds = 24 * 60 * 60;
 
                 cache = seconds / blocksCount;
@@ -127,8 +127,8 @@ module.exports = (coin) => {
 
             try {
                 const date = moment.utc().subtract(24, 'hours').toDate();
-                const blocksCount = await Block.count({ createdAt: { $gt: date } });
-                const masternodesCount = await Masternode.count();
+                const blocksCount = await Block.countDocuments({ createdAt: { $gt: date } });
+                const masternodesCount = await Masternode.countDocuments();
 
                 cache = (24.0 / (blocksCount / masternodesCount));
                 cutOff = moment().utc().add(5, 'minutes').unix();
@@ -353,7 +353,7 @@ module.exports = (coin) => {
                 query.addr = req.query.hash;
             }
 
-            const total = await Masternode.count(query);
+            const total = await Masternode.countDocuments(query);
             const mns = await Masternode.find(query).skip(skip).limit(limit).sort({ lastPaidAt: -1, status: 1 });
 
             res.json({ mns, pages: total <= limit ? 1 : Math.ceil(total / limit) });
@@ -487,7 +487,7 @@ module.exports = (coin) => {
      */
     const getWalletCount = async(req, res) => {
         try {
-            await Rich.find({ 'value': { $gt: 0 } }).count(function(err, count) {
+            await Rich.find({ 'value': { $gt: 0 } }).countDocuments(function(err, count) {
                 res.json(count);
 
             });
@@ -566,7 +566,7 @@ module.exports = (coin) => {
         try {
             const limit = req.query.limit ? parseInt(req.query.limit, 10) : 10;
             const skip = req.query.skip ? parseInt(req.query.skip, 10) : 0;
-            const total = await TX.find().sort({ blockHeight: -1 }).count();
+            const total = await TX.find().sort({ blockHeight: -1 }).countDocuments();
             const txs = await TX.find().skip(skip).limit(limit).sort({ blockHeight: -1 });
 
             res.json({ txs, pages: total <= limit ? 1 : Math.ceil(total / limit) });
@@ -681,7 +681,7 @@ module.exports = (coin) => {
     };
     return {
         getAddress,
-        getAvgBlockTime,
+        get,
         getAvgMNTime,
         getBlock,
         getCoin,

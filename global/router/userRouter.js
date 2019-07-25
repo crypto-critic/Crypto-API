@@ -8,51 +8,19 @@ const settings = require('../../initial/settings');
 const fs = require('fs');
 const path = require('path');
 const indexPath = fs.realpathSync(process.cwd());
-const setupMongoDb = require('../../services/mongo-setup');
+const setupMongoDb = require('../../services/setupMongoDb');
+const installCoin = require('../../services/installCoin');
+const RPC = require('../../coin/rpc/rpc');
 
 module.exports = (router)=>{
-    router.post('/users/register', async (req, res) => {
-        User.findOne({
-            email: req.body.email
-        }).then(user => {
-            if(user) {
-                return res.status(400).json({
-                    email: 'Email already exists'
-                });
-            }
-            else {
-                bcrypt.genSalt(10, (err, salt) => {
-                    if(err) console.error('There was an error', err);
-                    else {
-                        bcrypt.hash(req.body.password, salt, (err, hash) => {
-                            if(err) console.error('There was an error', err);
-                            else {
-                                const newUser = new User({
-                                    _id: new mongoose.Types.ObjectId,
-                                    email: req.body.email,
-                                    password: hash,
-                                });
-                                newUser
-                                    .save()
-                                    .then(user => {
-                                        res.json(user)
-                                    });
-                            }
-                        });
-                    }
-                });
-            }
-        });
-    });
-
     router.post('/users/login', (req, res) => {
         const email = req.body.email;
         const password = req.body.password;
         User.findOne({email})
             .then(user => {
                 if(!user) {
-                    errors.email = 'User not found';
-                    return res.status(404).json(errors);
+                    res.status(404).json({status: 'error', message: 'User not found!'});
+                    return;
                 }
                 bcrypt.compare(password, user.password)
                     .then(isMatch => {
@@ -74,14 +42,19 @@ module.exports = (router)=>{
                             });
                         }
                         else {
-                            errors.password = 'Incorrect Password';
-                            return res.status(400).json(errors);
+                            res.status(400).json({status: 'error', message: 'Password do not match!'});
                         }
                     });
             });
     });
 
-    router.post('/users/insert_coin', passport.authenticate('jwt', { session: false }),  async (req, res) => {
+    router.post('/users/get-list', passport.authenticate('jwt', { session: false }),  async (req, res) => {
+        let coinId = req.body.coinId;
+        let list = await List.find({});
+        res.status(200).json(list);
+    });
+
+    router.post('/users/insert-coin', passport.authenticate('jwt', { session: false }),  async (req, res) => {
         let coinId = req.body.coinId;
         let check = await List.findOne({coinId: coinId});
         if (check === null) {
@@ -95,8 +68,9 @@ module.exports = (router)=>{
             };
             await List.create({
                 coinId,
+                marketId: req.body.marketId || coinId,
                 name: req.body.name || coinTd,
-                active: req.body.active || true,
+                active: false,
                 category: req.body.category || 'masternode',
                 symbol: req.body.symbol || coinId,
                 links: {
@@ -110,13 +84,58 @@ module.exports = (router)=>{
                     explorer: [req.body.explorer || null],
                     github: [req.body.github || null],
                     reddit:[req.body.reddit || null],
+                    download: req.body.link
                 },
                 wallet
             });
-            res.status(401).json({status: 'success', message: 'uploaded'})
+            res.status(200).json({status: 'success', message: 'insert coin to Db'})
         } else {
             res.status(401).json({status: 'error', message: 'coin already exist!'})
         }
+        
+    });
 
+    router.post('/users/setup-coin', passport.authenticate('jwt', { session: false }),  async (req, res) => {
+        let coinId = req.body.coinId;
+        let check = await List.findOne({coinId: coinId});
+        console.log(coinId, check.links.download, check.wallet.port)
+        if (check.active === false) {
+            installCoin(coinId, check.links.download, check.wallet.port)
+                .then(()=> res.status(200).json({status: 'success', message: 'setup coin success'}))
+                .catch(err => res.status(400).json({status: 'error', message: err.message}))
+        } else {
+            res.status(401).json({status: 'error', message: 'coin already setup!'})
+        }
+    });
+
+    router.post('/users/test-setup', async (req, res) => {
+        let coinId = req.body.coinId;
+        let coin = await List.findOne({coinId});
+        let config = coin.wallet;
+        let rpc = new RPC(config);
+        let info = await rpc.call('getinfo');
+        res.json({coinId, ...info});
+    });
+
+    router.post('/users/enable-sync', passport.authenticate('jwt', { session: false }), async (req, res) => {
+        let coinId = req.body.coinId;
+        List.findOneAndUpdate({coinId: coinId},{$set: {active: true}}, (err)=>{
+            if(!err){res.status(200).json({status: 'success', message: 'enable sync!'})}
+        });
+    });
+
+    router.post('/users/setup-chain/read-file', passport.authenticate('jwt', { session: false }),  async (req, res) => {
+        let coinId = req.body.coinId;
+        fs.readFile(path.resolve(indexPath, `initial/${coinId}.chain.js`), 'utf-8', (err, data)=>{
+            res.send(data);
+        })
+    });
+
+    router.post('/users/setupChain/save-file', passport.authenticate('jwt', { session: false }),  async (req, res) => {
+        let coinId = req.body.coinId;
+        let data = req.body.data;
+        fs.writeFile(path.resolve(indexPath, `initial/${coinId}.chain.js`), data, (err)=>{
+            if(!err) {res.status(200).json({status: 'success', message: `created ${coinId}.chain.js`})};
+        })
     });
 };

@@ -10,11 +10,11 @@ const UTXO = require('./blockchain-models/utxo');
 const BlockReward = require('./blockchain-models/blockreward');
 const Market = require('./market-models/market/market');
 const Router = require('./router/createRouter');
-const getDataFromCoingecko = require('../lib/getDataFromCoingecko');
 
 class Coin {
     constructor(object){
         this.coinId = object.coinId;
+        this.marketId = object.marketId || object.coinId;
         this.connection = new Connection(object.coinId).connection;
         this.rpc = new RPC(object.wallet);
         this.block = new Block(this.connection).model;
@@ -29,4 +29,5 @@ class Coin {
         this.router = new Router(this).router;
     }
 }
+
 module.exports = Coin;
