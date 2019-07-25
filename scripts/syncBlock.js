@@ -44,7 +44,7 @@ const block = async (coin) => {
                     console.log(coin.coinId, ' POS ', height);
                     await util.addPoS(block, rpctx);
                 } else {
-                    console.log(coin.coinId, ' POS ', height);
+                    console.log(coin.coinId, ' POW ', height);
                     await util.addPoW(block, rpctx);
                 }
             });
@@ -96,7 +96,8 @@ const block = async (coin) => {
 
 const syncBlock = () => getList().then(data => {
     if(data!==null) {data.map(i => {
-        // block(i);
+        console.log('block ', i.coinId);
+        block(i);
     })};
 });
 

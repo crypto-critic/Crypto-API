@@ -64,7 +64,7 @@ module.exports = async (coin) => {
             });
             // Remove unspent transactions.
             if (txIds.size) {
-                await UTXO.deleteMany,({ _id: { $in: Array.from(txIds) } });
+                await UTXO.deleteMany({ _id: { $in: Array.from(txIds) } });
             }
         }
         return txin;

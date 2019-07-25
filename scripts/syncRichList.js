@@ -7,7 +7,7 @@ const getList = require(`../global/getList`);
     const Rich = await coin.rich;
     const UTXO = await coin.utxo;
     async function syncRich() {
-        await Rich.deleteMany,({});
+        await Rich.deleteMany({});
         const addresses = await UTXO.aggregate([
             { $group: { _id: '$address', sum: { $sum: '$value' } } },
             { $sort: { sum: -1 } }
