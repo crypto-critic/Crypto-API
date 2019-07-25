@@ -54,7 +54,12 @@ const setupCoin = async (coinId, coinLink, rpcPort) => {
         cwd: process.cwd(),
         detached: true,
         stdio: 'inherit'
-    })
+    });
+    await spawn(`rm`, [`-rf`, `${destination}`], {
+        cwd: process.cwd(),
+        detached: true,
+        stdio: 'inherit'
+    });
 };
 
 module.exports = setupCoin;
