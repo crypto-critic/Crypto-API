@@ -98,8 +98,8 @@ module.exports = (router)=>{
     router.post('/users/setup-coin', passport.authenticate('jwt', { session: false }),  async (req, res) => {
         let coinId = req.body.coinId;
         let check = await List.findOne({coinId: coinId});
-        console.log(coinId, check.links.download, check.wallet.port)
         if (check.active === false) {
+            res.status(200).json({status: 'pending', message: 'setup coin in process'})
             installCoin(coinId, check.links.download, check.wallet.port)
                 .then(()=> res.status(200).json({status: 'success', message: 'setup coin success'}))
                 .catch(err => res.status(400).json({status: 'error', message: err.message}))
@@ -119,8 +119,11 @@ module.exports = (router)=>{
 
     router.post('/users/enable-sync', passport.authenticate('jwt', { session: false }), async (req, res) => {
         let coinId = req.body.coinId;
-        List.findOneAndUpdate({coinId: coinId},{$set: {active: true}}, (err)=>{
-            if(!err){res.status(200).json({status: 'success', message: 'enable sync!'})}
+        List.findOneAndUpdate({coinId: coinId},{$set: {active: true}}, (err, data)=>{
+            if(!err && data)
+                {res.status(200).json({status: 'success', message: 'enable sync!'})}
+            else 
+                {res.status(400).json({status: 'error', message: 'error'})}
         });
     });
 
