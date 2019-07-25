@@ -17,7 +17,7 @@ const syncBlockJob = new CronJob(
 )
 const syncCoinDetailJob = new CronJob(
     twoMintutes,
-    () => {console.log('s')},
+    () => {syncCoinDetail()},
     () => console.log('Synced CoinDetail!')
 )
 const syncMasternodeListJob = new CronJob(
