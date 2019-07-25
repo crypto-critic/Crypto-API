@@ -6,8 +6,8 @@ const getList = require(`../global/getList`);
 const Coin = require('../coin/coin');
 
 const block = async (coin) => {
-    let blockchain = await require(`../initial/${coin.coinId}.chain`);
-    console.log(`../initial/${coin.coinId}.chain`)
+    let blockchain = await require(`../initial/${coin.coinId}.chain.js`);
+    console.log(`../initial/${coin.coinId}.chain.js`)
     let util = await require('./util')(coin);
     let Block = await coin.block;
     let TX = await coin.tx;
@@ -96,7 +96,6 @@ const block = async (coin) => {
 
 const syncBlock = () => getList().then(data => {
     if(data!==null) {data.map(i => {
-        console.log('block ', i.coinId);
         block(i);
     })};
 });
