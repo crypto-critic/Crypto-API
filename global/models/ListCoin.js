@@ -4,6 +4,7 @@ const GlobalConnection = require('../globalConnection');
 const locale = require ('./locale_style');
 const ListSchema = new Schema({
     coinId: { type: String, unique: true, index: true},
+    marketId: { type: String, unique: true},
     name: { type: String, require: true},
     port: { type: String, require: true},
     active: { type: Boolean, default: false},
