@@ -4,9 +4,9 @@ module.exports =  (coin) => {
     const rpc =  coin.rpc;
     const Block = coin.block;
     const Coin = coin.coin;
-    const chain = require(`../../initial/${coin.coinId}chain`);
+    const chain = require(`../../initial/${coin.coinId}.chain`);
     const chainBlockTime = async (req, res) => {
-        let blocktime = await chain.avgBlockTime;
+        let blocktime = await chain.nTargetTimespan;
         res.json({blocktime: blocktime});
     };
     const chainBlockReward = async (req, res) => {
