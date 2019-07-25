@@ -31,8 +31,8 @@ module.exports =  (coin) => {
         res.json({mnratio})
     };
     const chainCollateral = async (req, res) =>{
-        let collateral = await chain.mncoins;
-        res.json({collateral: collateral})
+        let collateral = await chain.collateral;
+        res.json({collateral})
     };
     const totalSupply = (req, res) =>{
         let totalSupply = chain.totalSupply;
