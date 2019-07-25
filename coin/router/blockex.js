@@ -64,7 +64,7 @@ module.exports = (coin) => {
      * @param {Object} req The request object.
      * @param {Object} res The response object.
      */
-    const get = async (req, res) => {
+    const getAverage = async (req, res) => {
         // When does the cache expire.
         // For now this is hard coded.
         let cache = 90.0;
@@ -681,7 +681,7 @@ module.exports = (coin) => {
     };
     return {
         getAddress,
-        get,
+        getAverage,
         getAvgMNTime,
         getBlock,
         getCoin,
