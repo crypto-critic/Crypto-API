@@ -42,8 +42,8 @@ const syncMarketDataJob = new CronJob(
 )
 
 syncBlockJob.start();
-// syncCoinDetailJob.start();
-// syncMasternodeListJob.start();
-// syncPeerListJob.start();
-// syncRichListJob.start();
-// syncMarketDataJob.start();
+syncCoinDetailJob.start();
+syncMasternodeListJob.start();
+syncPeerListJob.start();
+syncRichListJob.start();
+syncMarketDataJob.start();
