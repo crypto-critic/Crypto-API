@@ -14,7 +14,7 @@ const blocksPerMonth = (blocksPerDay * 365.25) / 12; // 29220
 
 const blocksPerYear = blocksPerDay * 365.25; // 350640
 
-const colateral = 1000.0;
+const collateral = 1000.0;
 
 const getMNBlocksPerDay = (mns) => {
     return blocksPerDay / mns;
@@ -180,7 +180,7 @@ module.exports = {
     blocksPerMonth,
     blocksPerWeek,
     blocksPerYear,
-    colateral,
+    collateral,
     // params,
     getMNBlocksPerDay,
     getMNBlocksPerMonth,
