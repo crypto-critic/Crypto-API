@@ -36,7 +36,7 @@ module.exports = (router)=>{
                                 else {
                                     res.json({
                                         success: true,
-                                        token: `${settings.vpsIndex} ${token}`
+                                        token: `${token}`
                                     });
                                 }
                             });

@@ -4,7 +4,7 @@ const User = require('../global/models/User');
 const settings = require('../initial/settings');
 const opts = {};
 
-opts.jwtFromRequest = ExtractJWT.fromAuthHeaderWithScheme(`${settings.vpsIndex}`);
+opts.jwtFromRequest = ExtractJWT.fromHeader(`${settings.vpsIndex}`);
 opts.secretOrKey = 'pinokarahere';
 
 module.exports = passport => {
