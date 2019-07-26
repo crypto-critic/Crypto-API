@@ -4,20 +4,13 @@ module.exports =  (coin) => {
     const rpc =  coin.rpc;
     const Block = coin.block;
     const Coin = coin.coin;
+    const UTXO = coin.utxo;
     const chain = require(`../../initial/${coin.coinId}.chain`);
-    const chainBlockTime = async (req, res) => {
+    const chainVariables = async (req, res) => {
         let blocktime = await chain.nTargetTimespan;
-        res.json({blocktime: blocktime});
-    };
-    const chainBlockReward = async (req, res) => {
         let info = await rpc.call('getinfo');
         let nHeight = info.blocks;
         let blockreward = await chain.getSubsidy(nHeight);
-        res.json({blockreward})
-    };
-    const chainMasternodeRatio = async (req, res) =>{
-        let info = await rpc.call('getinfo');
-        let nHeight = info.blocks;
         const coin = await Coin.findOne().sort({ createdAt: -1 });
         let nMasternodeCount = coin.mnsOff + coin.mnsOn;
         let nMoneySupply = await cache.getFromCache("supply", moment().utc().add(1, 'hours').unix(), async() => {
@@ -27,22 +20,59 @@ module.exports =  (coin) => {
             t = utxo[0].total;
             return t;
         });
-        let mnratio = chain.mnratio(nHeight, nMasternodeCount, nMoneySupply)
-        res.json({mnratio})
-    };
-    const chainCollateral = async (req, res) =>{
+        let MNSubsidy = chain.getMNSubsidy(nHeight, nMasternodeCount, nMoneySupply);
         let collateral = await chain.collateral;
-        res.json({collateral})
-    };
-    const totalSupply = (req, res) =>{
         let totalSupply = chain.totalSupply;
-        res.json({totalSupply})
-    };
+        res.json({
+            blocktime,
+            nHeight,
+            blockreward,
+            nMasternodeCount,
+            nMoneySupply,
+            MNSubsidy,
+            collateral,
+            totalSupply
+        })
+    }
+    // const chainBlockTime = async (req, res) => {
+    //     let blocktime = await chain.nTargetTimespan;
+    //     res.json({blocktime: blocktime});
+    // };
+    // const chainBlockReward = async (req, res) => {
+    //     let info = await rpc.call('getinfo');
+    //     let nHeight = info.blocks;
+    //     let blockreward = await chain.getSubsidy(nHeight);
+    //     res.json({blockreward})
+    // };
+    // const chainMasternodeRatio = async (req, res) =>{
+    //     let info = await rpc.call('getinfo');
+    //     let nHeight = info.blocks;
+    //     const coin = await Coin.findOne().sort({ createdAt: -1 });
+    //     let nMasternodeCount = coin.mnsOff + coin.mnsOn;
+    //     let nMoneySupply = await cache.getFromCache("supply", moment().utc().add(1, 'hours').unix(), async() => {
+    //         const utxo = await UTXO.aggregate([
+    //             { $group: { _id: 'supply', total: { $sum: '$value' } } }
+    //         ]);
+    //         t = utxo[0].total;
+    //         return t;
+    //     });
+    //     let mnratio = chain.mnratio(nHeight, nMasternodeCount, nMoneySupply)
+    //     res.json({mnratio})
+    // };
+    // const chainCollateral = async (req, res) =>{
+    //     let collateral = await chain.collateral;
+    //     res.json({collateral})
+    // };
+    // const totalSupply = (req, res) =>{
+    //     let totalSupply = chain.totalSupply;
+    //     res.json({totalSupply})
+    // };
     return {
-        chainBlockTime,
-        chainBlockReward,
-        chainMasternodeRatio,
-        chainCollateral,
-        totalSupply
+        chainVariables,
+        // chainBlockTime,
+        // chainBlockReward,
+        // chainMasternodeRatio,
+        // chainCollateral,
+        // totalSupply
     }
 };
