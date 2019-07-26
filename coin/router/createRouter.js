@@ -36,11 +36,12 @@ class Router {
         router.get('/getblock', iquidus.getblock);
         router.get('/getrawtransaction', iquidus.getrawtransaction);
         router.get('/getnetworkhashps', iquidus.getnetworkhashps);
-        router.get('/chainblocktime', chain.chainBlockTime);
-        router.get('/chainblockreward', chain.chainBlockReward);
-        router.get('/chainmasternoderatio', chain.chainMasternodeRatio);
-        router.get('/collateral', chain.chainCollateral);
-        router.get('/totalsupply', chain.totalSupply);
+        // router.get('/chainblocktime', chain.chainBlockTime);
+        // router.get('/chainblockreward', chain.chainBlockReward);
+        // router.get('/chainmasternoderatio', chain.chainMasternodeRatio);
+        // router.get('/collateral', chain.chainCollateral);
+        // router.get('/totalsupply', chain.totalSupply);
+        router.get('/chaindata', chain.chainVariables);
         router.get('/marketdata', market.GetMarketData);
         this.router = router;
     }
